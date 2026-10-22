@@ -1,0 +1,62 @@
+name: Publicar instalador
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión estable (por ejemplo, 1.0.1)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.version || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+      - name: Resolver versión
+        shell: pwsh
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          RELEASE_REF: ${{ github.ref_name }}
+        run: |
+          $version = if ($env:REQUESTED_VERSION) { $env:REQUESTED_VERSION } else { $env:RELEASE_REF -replace '^v', '' }
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'La versión debe tener el formato 1.0.0.' }
+          "RELEASE_VERSION=$version" >> $env:GITHUB_ENV
+      - name: Compilar y comprobar
+        shell: pwsh
+        run: |
+          dotnet build App/App.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet build test-connection/test-connection.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project tests/OpenRgbUpdateChecks -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project tests/RgbStudioUpdateChecks -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          powershell -NoProfile -ExecutionPolicy Bypass -File tests/OpenRgbUpdateChecks/Check-Launcher.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Construir instalador independiente
+        shell: pwsh
+        run: ./scripts/Build-Release.ps1 -Version $env:RELEASE_VERSION
+      - name: Probar instalación y actualización sin hardware
+        shell: pwsh
+        run: |
+          ./scripts/Test-Installer.ps1 -Version $env:RELEASE_VERSION -Installer "bin/releases/${env:RELEASE_VERSION}/RGB-Studio-${env:RELEASE_VERSION}-win-x64-Setup.exe"
+      - name: Publicar release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/Publish-Release.ps1 -Version $env:RELEASE_VERSION -Target $env:GITHUB_SHA

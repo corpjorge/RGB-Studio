@@ -29,6 +29,7 @@ internal sealed class TrayIcon : IDisposable
             Visible = true,
         };
         _icon.DoubleClick += (_, _) => OpenRequested?.Invoke();
+        _icon.BalloonTipClicked += (_, _) => OpenRequested?.Invoke();
     }
 
     internal void ShowBackgroundHint()
@@ -36,6 +37,13 @@ internal sealed class TrayIcon : IDisposable
         _icon.BalloonTipTitle = "RGB Studio sigue activo";
         _icon.BalloonTipText = "Los colores y efectos continuan en segundo plano.";
         _icon.ShowBalloonTip(3000);
+    }
+
+    internal void ShowUpdateReady(string version)
+    {
+        _icon.BalloonTipTitle = $"RGB Studio {version} disponible";
+        _icon.BalloonTipText = "La actualización se descargó. Abre RGB Studio para instalarla o sal desde la bandeja.";
+        _icon.ShowBalloonTip(5000);
     }
 
     private static Icon LoadIcon()

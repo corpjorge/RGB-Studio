@@ -13,6 +13,7 @@ el README y la guía puedan verse sin depender de enlaces externos.
 | `images/calibracion.png` | Ganancias, gamma y acciones del diálogo. | Contenido del diálogo WPF renderizado con valores iniciales de ejemplo para la Z390. |
 | `images/sin-conexion.jpg` | Ventana sin dispositivos y error del servidor SDK. | Captura real de la aplicación ejecutada sin servidor SDK accesible. |
 | `images/actualizaciones-openrgb.png` | Panel de búsqueda automática, estado y botón Buscar ahora. | Interfaz WPF renderizada con datos simulados y una actualización preparada como ejemplo. |
+| `images/instalador-actualizaciones.png` | Versión de RGB Studio, actualización preparada y panel de OpenRGB. | Interfaz WPF renderizada con datos simulados; la versión posterior es un ejemplo. |
 
 Las vistas de demostración reutilizan el XAML, los controles, el renderizador y los
 recursos gráficos de la aplicación compilada. Se prepararon fuera del flujo normal de conexión,

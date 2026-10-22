@@ -14,6 +14,25 @@ imagen son ilustrativos; no representan una validación física del hardware.*
 - [Guía visual de uso](docs/GUIA-DE-USO.md): conexión, selección, colores, efectos, calibración y bandeja.
 - [Arquitectura y desarrollo](docs/DESARROLLO.md): módulos, comunicación, compilación y validación manual.
 - [Origen y actualización de las imágenes](docs/IMAGENES.md).
+- [Instalador, releases y actualizaciones de RGB Studio](docs/RELEASES.md).
+
+## Instalar sin compilar
+
+Descarga el instalador de [la última versión de RGB Studio](https://github.com/corpjorge/RGB-Studio/releases/latest),
+ejecútalo y abre **RGB Studio** desde el menú Inicio. Es una instalación para el usuario actual,
+con desinstalador y .NET incluido: no necesitas Visual Studio ni el SDK de .NET.
+
+Requiere Windows x64 (Windows 11 recomendado; mínimo del instalador: Windows 10 22H2) e Internet
+para la primera descarga de OpenRGB. La aplicación lo prepara e inicia automáticamente cuando
+el servidor no está disponible. OpenRGB puede pedir permiso de administrador. Para la RAM y otros
+dispositivos SMBus, instala [PawnIO](https://pawnio.eu) desde su fuente oficial.
+
+RGB Studio busca sus propias versiones al iniciar y cada seis horas. Cuando aparece un release
+nuevo, descarga su instalador y muestra **Actualizar y reiniciar**; también lo instala al salir
+desde la bandeja si el modo automático está activo. Los perfiles de color y las tiras se conservan.
+
+El instalador actual no tiene una firma de editor: Windows puede mostrar un aviso de editor
+desconocido. La compatibilidad de los dispositivos depende de OpenRGB.
 
 ## Funciones principales
 
@@ -27,6 +46,7 @@ imagen son ilustrativos; no representan una validación física del hardware.*
 - Calibración RGB por dispositivo y por zona de la placa catalogada, con perfiles guardados.
 - Configuración de la longitud de tiras direccionables y funcionamiento en segundo plano.
 - Detección, descarga e instalación automática de nuevas versiones estables de OpenRGB para Windows x64.
+- Instalador con .NET incluido y actualización de RGB Studio desde los releases de GitHub.
 
 ## Requisitos
 

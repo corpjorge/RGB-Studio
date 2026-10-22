@@ -77,6 +77,7 @@ public partial class MainWindow : Window
 
         InitializeComponent();
         InitializeOpenRgbUpdates();
+        InitializeRgbStudioUpdates();
 
         // Ocupa todo el alto util si hace falta, pero nunca queda escondida
         // detras de la barra de tareas en pantallas mas pequenas.
@@ -104,7 +105,7 @@ public partial class MainWindow : Window
 
         _apps.Changed += OnForegroundAppChanged;
 
-        Loaded += (_, _) => Connect();
+        Loaded += async (_, _) => await EnsureOpenRgbConnectionAsync();
         Closing += OnWindowClosing;
         Closed += (_, _) =>
         {
@@ -431,7 +432,7 @@ public partial class MainWindow : Window
             DeviceList.SelectedIndex = Math.Clamp(select, 0, DeviceList.Items.Count - 1);
     }
 
-    private void OnReconnect(object sender, RoutedEventArgs e) => Connect();
+    private async void OnReconnect(object sender, RoutedEventArgs e) => await EnsureOpenRgbConnectionAsync();
 
     // ------------------------------------------------- tiras direccionables
 

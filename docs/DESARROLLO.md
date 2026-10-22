@@ -43,9 +43,14 @@ estado lógico mostrado en el mapa.
 | `App/TrayIcon.cs` | Bandeja, restauración y salida. |
 | `App/MainWindow.Updates.cs` | Búsqueda periódica, controles de actualización y cancelación. |
 | `App/Updates/` | Publicaciones oficiales, descarga, validación y manifiesto de OpenRGB. |
+| `App/MainWindow.AppUpdates.cs` | Interfaz, notificaciones y aplicación de actualizaciones de RGB Studio. |
+| `installer/` | Instalador Inno Setup, helper y requisitos para usuarios finales. |
+| `scripts/` | Construcción, validación y publicación de releases. |
+| `.github/workflows/release.yml` | Publicación automática de instaladores para versiones estables. |
 | `App/App.xaml.cs` | Instancia única y ciclo de vida. |
 | `test-connection/` | Utilidad de consola para inspección y pruebas manuales. |
 | `tests/OpenRgbUpdateChecks/` | Verificaciones del actualizador y del selector del lanzador, sin hardware. |
+| `tests/RgbStudioUpdateChecks/` | Validación del actualizador de la aplicación mediante HTTP simulado. |
 | `Iniciar.ps1` y `RGB Studio.cmd` | Arranque de OpenRGB y la aplicación compilada. |
 | `docs/` | Guía de uso, arquitectura e imágenes. |
 
@@ -191,3 +196,14 @@ Este mecanismo no instala controladores ni valida automáticamente la respuesta 
 
 Se verificó la descarga y preparación de OpenRGB 1.1 (ZIP oficial de Windows x64) sin ejecutarlo,
 junto con 36 comprobaciones locales del actualizador y 9 del lanzador. No se realizaron pruebas físicas con esta versión.
+
+## Instalador y actualizaciones de RGB Studio
+
+Consulta [el procedimiento completo de releases](RELEASES.md). `RgbStudioUpdater` consulta la
+API pública de GitHub, valida el repositorio, tag, asset, tamaño y `digest`, y prepara un instalador
+verificado. No se incluye ninguna credencial en el programa. El helper instalado espera el PID
+de la aplicación antes de actualizar sus archivos y se ejecuta con los mismos permisos del usuario.
+
+`OpenRgbHost` cubre el primer arranque de una instalación limpia: reutiliza un servidor activo o
+inicia la versión administrada después de descargarla. En desarrollo conserva la búsqueda de las
+carpetas hermanas. La descarga automática de OpenRGB y la de RGB Studio tienen controles separados.

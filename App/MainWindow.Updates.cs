@@ -13,6 +13,7 @@ public partial class MainWindow
     private OpenRgbUpdater? _openRgbUpdater;
     private CancellationTokenSource? _activeUpdateCancellation;
     private bool _checkingOpenRgb;
+    private readonly SemaphoreSlim _openRgbStartGate = new(1, 1);
 
     private void InitializeOpenRgbUpdates()
     {
@@ -74,7 +75,9 @@ public partial class MainWindow
         });
         try
         {
-            await _openRgbUpdater.CheckAsync(force, progress, updateToken);
+            OpenRgbUpdateResult result = await _openRgbUpdater.CheckAsync(force, progress, updateToken);
+            if (result.Installed && !_rgb.Connected && !_updatesLifetime.IsCancellationRequested)
+                await EnsureOpenRgbConnectionAsync();
         }
         catch (OperationCanceledException) when (_updatesLifetime.IsCancellationRequested) { }
         catch (OperationCanceledException) when (updateToken.IsCancellationRequested)
@@ -97,6 +100,29 @@ public partial class MainWindow
             _activeUpdateCancellation = null;
             CheckOpenRgbUpdateButton.IsEnabled = true;
             OpenRgbUpdateProgress.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private async Task EnsureOpenRgbConnectionAsync()
+    {
+        if (_updatesLifetime.IsCancellationRequested) return;
+        try
+        {
+            await _openRgbStartGate.WaitAsync(_updatesLifetime.Token);
+            try
+            {
+                Status.Text = "Preparando el servidor de OpenRGB…";
+                string? message = await new OpenRgbHost().EnsureStartedAsync(_updateStore, _updatesLifetime.Token);
+                if (message is not null) { Status.Text = message; return; }
+                if (!_updatesLifetime.IsCancellationRequested) Connect();
+            }
+            finally { _openRgbStartGate.Release(); }
+        }
+        catch (OperationCanceledException) when (_updatesLifetime.IsCancellationRequested) { }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.ComponentModel.Win32Exception
+                                   or InvalidDataException or InvalidOperationException)
+        {
+            Status.Text = $"No se pudo iniciar OpenRGB: {ex.Message}";
         }
     }
 }

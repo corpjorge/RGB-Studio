@@ -284,6 +284,20 @@
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="DISPOSITIVOS" Style="{StaticResource Heading}"/>
                 <StackPanel DockPanel.Dock="Bottom" Margin="0,18,0,0">
+                    <TextBlock x:Name="RgbStudioVersionLabel" Text="RGB STUDIO" Style="{StaticResource Heading}"/>
+                    <CheckBox x:Name="AutoUpdateRgbStudio" Foreground="{StaticResource Text}"
+                              Content="Descargar actualizaciones" Margin="0,0,0,10"
+                              ToolTip="Busca al iniciar y cada seis horas. Las actualizaciones descargadas se instalan al salir desde la bandeja o al pulsar Actualizar y reiniciar."
+                              Checked="OnAutoUpdateRgbStudioChanged" Unchecked="OnAutoUpdateRgbStudioChanged"/>
+                    <TextBlock x:Name="RgbStudioUpdateStatus" Text="Buscando nuevas versiones…"
+                               TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource TextDim}" Margin="0,0,0,10"/>
+                    <ProgressBar x:Name="RgbStudioUpdateProgress" Height="5" Minimum="0" Maximum="100"
+                                 Visibility="Collapsed" Margin="0,0,0,10"/>
+                    <Button x:Name="InstallRgbStudioUpdateButton" Content="Actualizar y reiniciar"
+                            Click="OnInstallRgbStudioUpdate" Style="{StaticResource Primary}" Visibility="Collapsed" Margin="0,0,0,8"/>
+                    <Button x:Name="CheckRgbStudioUpdateButton" Content="Buscar ahora" Click="OnCheckRgbStudioUpdate"/>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,18,0,0">
                     <TextBlock Text="ACTUALIZACIONES DE OPENRGB" Style="{StaticResource Heading}"/>
                     <CheckBox x:Name="AutoUpdateOpenRgb" Foreground="{StaticResource Text}"
                               Checked="OnAutoUpdateOpenRgbChanged" Unchecked="OnAutoUpdateOpenRgbChanged"

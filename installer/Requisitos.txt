@@ -1,0 +1,21 @@
+﻿RGB Studio para Windows x64
+
+El instalador incluye .NET: no necesitas instalar el SDK ni compilar el proyecto.
+
+RGB Studio descargará automáticamente OpenRGB desde su distribución oficial y lo
+iniciará con su servidor SDK. Se necesita Internet para esa primera descarga.
+
+Windows puede solicitar permisos de administrador al iniciar OpenRGB. RGB Studio
+y su instalador se ejecutan con los permisos normales del usuario.
+
+Para controlar memoria RAM y otros dispositivos SMBus se necesita PawnIO, instalado
+desde https://pawnio.eu. Los controladores no se instalan silenciosamente con RGB Studio.
+El hardware disponible depende de la compatibilidad de OpenRGB con cada modelo.
+
+Las nuevas versiones de RGB Studio se descargan desde sus releases de GitHub.
+La aplicación avisa cuando están listas y permite Actualizar y reiniciar; también
+se instalan al salir desde el icono de la bandeja si el modo automático está activo.
+
+La calibración, la configuración de tiras y OpenRGB se conservan entre actualizaciones.
+
+Descargas y documentación: https://github.com/corpjorge/RGB-Studio

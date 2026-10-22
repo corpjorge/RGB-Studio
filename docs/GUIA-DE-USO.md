@@ -244,3 +244,17 @@ Los archivos de actualización se guardan en `%LocalAppData%\RgbStudio\OpenRGB\`
 
 Las calibraciones y longitudes de tiras de RGB Studio siguen guardadas en `%AppData%\RgbStudio\`.
 La actualización no las reemplaza. Las fotografías y colores de la imagen son de demostración.
+
+## 11. Instalar y actualizar RGB Studio
+
+El [release de GitHub](https://github.com/corpjorge/RGB-Studio/releases/latest) incluye un instalador
+con .NET, accesos directos y desinstalador. En un equipo nuevo la aplicación descarga e inicia
+OpenRGB automáticamente. La instalación de PawnIO para la RAM se realiza por separado.
+
+El panel **RGB STUDIO** muestra la versión de la aplicación, su comprobación automática y el botón
+**Buscar ahora**. Si hay un release posterior, el instalador se descarga y aparece **Actualizar y
+reiniciar**. También se instala al salir desde la bandeja si el modo automático está activado.
+La opción **×** mantiene la app en segundo plano y no inicia esa instalación.
+
+Consulta la [guía del instalador](RELEASES.md) para requisitos, conservación de perfiles y publicación
+de nuevas versiones. El actualizador de RGB Studio es independiente del actualizador de OpenRGB.

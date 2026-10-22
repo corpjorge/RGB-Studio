@@ -15,6 +15,11 @@
          clase App de WPF. Se fija el espacio de nombres a mano. -->
     <RootNamespace>RgbStudio</RootNamespace>
     <AssemblyName>RgbStudio</AssemblyName>
+    <Version>1.0.0</Version>
+    <Product>RGB Studio</Product>
+    <Company>RGB Studio</Company>
+    <Description>Control de iluminación RGB mediante OpenRGB.</Description>
+    <RepositoryUrl>https://github.com/corpjorge/RGB-Studio</RepositoryUrl>
     <ApplicationIcon>Assets\RgbStudio.ico</ApplicationIcon>
 
     <!-- Todo el acceso al hardware pasa por el servidor de OpenRGB via red,
