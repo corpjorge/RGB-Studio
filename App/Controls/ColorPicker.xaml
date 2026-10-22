@@ -1,0 +1,116 @@
+<UserControl x:Class="RgbStudio.Controls.ColorPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="FieldBg" Color="#25252D"/>
+        <SolidColorBrush x:Key="FieldText" Color="#E8E8EC"/>
+        <SolidColorBrush x:Key="Dim" Color="#8A8A96"/>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource FieldBg}"/>
+            <Setter Property="Foreground" Value="{StaticResource FieldText}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5,3"/>
+            <Setter Property="CaretBrush" Value="{StaticResource FieldText}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="Lbl" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Dim}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,4,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <!-- Rueda de tono con cuadro de saturacion/brillo en el centro -->
+        <Canvas x:Name="Wheel" Width="216" Height="216" HorizontalAlignment="Center"
+                Margin="0,0,0,12" Background="Transparent">
+
+            <Image x:Name="HueRing" Width="216" Height="216"
+                   MouseLeftButtonDown="OnRingDown" MouseMove="OnRingMove"
+                   MouseLeftButtonUp="OnPointerUp"/>
+
+            <Ellipse x:Name="HueThumb" Width="14" Height="14" Stroke="White" StrokeThickness="2"
+                     IsHitTestVisible="False"/>
+
+            <Border x:Name="SvSquare" Width="112" Height="112" Canvas.Left="52" Canvas.Top="52"
+                    MouseLeftButtonDown="OnSquareDown" MouseMove="OnSquareMove"
+                    MouseLeftButtonUp="OnPointerUp">
+                <Grid>
+                    <Rectangle x:Name="SvHue"/>
+                    <Rectangle>
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Offset="0" Color="#FFFFFFFF"/>
+                                <GradientStop Offset="1" Color="#00FFFFFF"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle>
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="#00000000"/>
+                                <GradientStop Offset="1" Color="#FF000000"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Grid>
+            </Border>
+
+            <Ellipse x:Name="SvThumb" Width="12" Height="12" Stroke="White" StrokeThickness="2"
+                     IsHitTestVisible="False"/>
+        </Canvas>
+
+        <!-- Colores rapidos -->
+        <ItemsControl x:Name="Presets" Margin="0,0,0,10">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+        <!-- Valores numericos -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="R" Style="{StaticResource Lbl}"/>
+            <TextBox   Grid.Row="0" Grid.Column="1" x:Name="RBox" Margin="0,0,0,5"
+                       KeyUp="OnRgbTyped"/>
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="H" Style="{StaticResource Lbl}"/>
+            <TextBox   Grid.Row="0" Grid.Column="4" x:Name="HBox" Margin="0,0,0,5" IsReadOnly="True"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="G" Style="{StaticResource Lbl}"/>
+            <TextBox   Grid.Row="1" Grid.Column="1" x:Name="GBox" Margin="0,0,0,5"
+                       KeyUp="OnRgbTyped"/>
+            <TextBlock Grid.Row="1" Grid.Column="3" Text="S" Style="{StaticResource Lbl}"/>
+            <TextBox   Grid.Row="1" Grid.Column="4" x:Name="SBox" Margin="0,0,0,5" IsReadOnly="True"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="B" Style="{StaticResource Lbl}"/>
+            <TextBox   Grid.Row="2" Grid.Column="1" x:Name="BBox" KeyUp="OnRgbTyped"/>
+            <TextBlock Grid.Row="2" Grid.Column="3" Text="V" Style="{StaticResource Lbl}"/>
+            <TextBox   Grid.Row="2" Grid.Column="4" x:Name="VBox" IsReadOnly="True"/>
+        </Grid>
+
+        <Grid Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="#" Style="{StaticResource Lbl}"/>
+            <TextBox Grid.Column="1" x:Name="HexBox" KeyUp="OnHexTyped"/>
+        </Grid>
+    </StackPanel>
+</UserControl>

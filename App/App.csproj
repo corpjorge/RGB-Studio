@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <!-- Las importaciones implicitas de Windows Forms chocan con Color,
+         UserControl y otros tipos de WPF. Las comunes se declaran de forma
+         explicita en GlobalUsings.cs y Forms queda aislado en TrayIcon.cs. -->
+    <ImplicitUsings>disable</ImplicitUsings>
+
+    <!-- El proyecto vive en una carpeta llamada "App", que chocaria con la
+         clase App de WPF. Se fija el espacio de nombres a mano. -->
+    <RootNamespace>RgbStudio</RootNamespace>
+    <AssemblyName>RgbStudio</AssemblyName>
+    <ApplicationIcon>Assets\RgbStudio.ico</ApplicationIcon>
+
+    <!-- Todo el acceso al hardware pasa por el servidor de OpenRGB via red,
+         asi que no hay dependencias nativas: x64 y sin requisito de admin. -->
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="OpenRGB.NET" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\RgbStudio.ico" />
+    <Resource Include="Assets\RgbStudio.png" />
+    <Resource Include="Assets\HyperXAlloyEliteRGB.png" />
+    <Resource Include="Assets\XpgSpectrixD80.png" />
+    <Resource Include="Assets\XpgSpectrixD41.png" />
+    <Resource Include="Assets\Z390AorusProWifi.png" />
+  </ItemGroup>
+
+</Project>

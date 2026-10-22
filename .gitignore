@@ -1,0 +1,19 @@
+# Compilacion .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# OpenRGB: binarios de terceros. Se descarga de openrgb.org, no se redistribuye.
+OpenRGB/
+
+# Version anterior de la aplicacion, que usaba las librerias de GIGABYTE.
+# Contiene el SDK propietario del fabricante y no se publica.
+RgbFusionApp old/
+
+# Registros y temporales
+*.log
+
+# Fuentes temporales usadas para generar los iconos finales.
+App/Assets/*-source.png

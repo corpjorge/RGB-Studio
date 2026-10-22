@@ -1,0 +1,411 @@
+<Window x:Class="RgbStudio.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:RgbStudio.Controls"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="RGB Studio" Height="1120" Width="1360"
+        MinHeight="680" MinWidth="1000"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" Icon="Assets/RgbStudio.ico"
+        StateChanged="OnWindowStateChanged"
+        Background="#16161A"
+        TextOptions.TextFormattingMode="Display"
+        FontFamily="Segoe UI">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="6"
+                            GlassFrameThickness="0" CornerRadius="0"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="Panel" Color="#1E1E24"/>
+        <SolidColorBrush x:Key="PanelAlt" Color="#25252D"/>
+        <SolidColorBrush x:Key="Accent" Color="#FF7A18"/>
+        <SolidColorBrush x:Key="Text" Color="#E8E8EC"/>
+        <SolidColorBrush x:Key="TextDim" Color="#8A8A96"/>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+
+        <Style x:Key="Heading" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextDim}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PanelAlt}"/>
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,9"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#33333D"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Primary" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource Accent}"/>
+            <Setter Property="Foreground" Value="#14140F"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="HelpButton" TargetType="Button">
+            <Setter Property="Content" Value="?"/>
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="#33333D"/>
+            <Setter Property="Foreground" Value="{StaticResource TextDim}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Help"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="100"/>
+            <Setter Property="ToolTipService.ShowDuration" Value="30000"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="9">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TitleButton" TargetType="Button">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextDim}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Cursor" Value="Arrow"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="TitleBg" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TitleBg" Property="Background" Value="#33333D"/>
+                                <Setter Property="Foreground" Value="{StaticResource Text}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource TitleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="CloseBg" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CloseBg" Property="Background" Value="#C42B1C"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- WPF ignora Background/Foreground en el desplegable: la lista
+             emergente usa colores del sistema y queda texto claro sobre fondo
+             claro. Hay que darle plantilla completa. -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="Bd" Background="Transparent"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource Accent}"/>
+                                <Setter Property="Foreground" Value="#14140F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="Toggle" Focusable="False" ClickMode="Press"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay,
+                                                      RelativeSource={RelativeSource TemplatedParent}}">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border x:Name="Bg" Background="{StaticResource PanelAlt}"
+                                                CornerRadius="6" Padding="10,8">
+                                            <Grid>
+                                                <ContentPresenter HorizontalAlignment="Left"
+                                                                  VerticalAlignment="Center"/>
+                                                <Path HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                      Data="M0,0 L4,4 L8,0" Stroke="#8A8A96"
+                                                      StrokeThickness="1.6"/>
+                                            </Grid>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bg" Property="Background" Value="#33333D"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+
+                            <ContentPresenter Margin="10,8" IsHitTestVisible="False"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding SelectionBoxItem}"/>
+
+                            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom"
+                                   AllowsTransparency="True" PopupAnimation="Slide" Focusable="False">
+                                <Border Background="#1B1B22" CornerRadius="6" Margin="0,4,0,0"
+                                        BorderBrush="#33333D" BorderThickness="1"
+                                        MinWidth="{TemplateBinding ActualWidth}">
+                                    <ScrollViewer MaxHeight="280">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Con clave, no implicito: el selector de color trae sus propias
+             cajas de texto y no queremos pisarles el estilo. -->
+        <Style x:Key="NumberBox" TargetType="TextBox">
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="CaretBrush" Value="{StaticResource Text}"/>
+            <Setter Property="Background" Value="{StaticResource PanelAlt}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="9,7"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Barra propia de la aplicacion -->
+        <Border Grid.Row="0" Height="40" Background="#1B1B22"
+                MouseLeftButtonDown="OnTitleBarMouseDown">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                    <Image Source="Assets/RgbStudio.png" Width="24" Height="24"
+                           Stretch="Uniform" Margin="0,0,9,0"/>
+                    <TextBlock Text="RGB" FontSize="14" FontWeight="Bold"
+                               Foreground="{StaticResource Accent}" VerticalAlignment="Center"/>
+                    <TextBlock Text="STUDIO" FontSize="14" FontWeight="Light"
+                               Margin="5,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="─" Style="{StaticResource TitleButton}" Click="OnMinimize"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True"/>
+                    <Button x:Name="MaximizeButton" Content="□" Style="{StaticResource TitleButton}"
+                            Click="OnMaximize" shell:WindowChrome.IsHitTestVisibleInChrome="True"/>
+                    <Button Content="×" Style="{StaticResource CloseButton}" Click="OnClose"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="230"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+        <!-- Dispositivos -->
+        <Border Grid.Row="0" Grid.Column="0" Background="{StaticResource Panel}"
+                CornerRadius="10" Padding="14">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="DISPOSITIVOS" Style="{StaticResource Heading}"/>
+                <ListBox x:Name="DeviceList" Background="Transparent" BorderThickness="0"
+                         Foreground="{StaticResource Text}"
+                         SelectionChanged="OnDeviceSelected"/>
+            </DockPanel>
+        </Border>
+
+        <!-- Mapa del dispositivo -->
+        <Border Grid.Row="0" Grid.Column="1" Background="{StaticResource Panel}"
+                CornerRadius="10" Padding="14" Margin="14,0">
+            <DockPanel>
+                <TextBlock x:Name="MapTitle" DockPanel.Dock="Top" Text="MAPA"
+                           Style="{StaticResource Heading}"/>
+                <Viewbox Stretch="Uniform">
+                    <Canvas x:Name="BoardCanvas" Width="1000" Height="700"/>
+                </Viewbox>
+            </DockPanel>
+        </Border>
+
+        <!-- Controles -->
+        <Border Grid.Row="0" Grid.Column="2" Background="{StaticResource Panel}"
+                CornerRadius="10" Padding="16">
+            <!-- Los botones van anclados abajo: el selector de color crece y
+                 antes los empujaba fuera del panel. El resto se desplaza. -->
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,14,0,0">
+                    <CheckBox x:Name="LiveApply" Content="Aplicar al instante" IsChecked="True"
+                              Foreground="{StaticResource TextDim}" FontSize="12"
+                              Margin="2,0,0,10"/>
+                    <Button Content="APLICAR" Style="{StaticResource Primary}"
+                            Click="OnApply" Margin="0,0,0,8"/>
+                    <Button Content="Apagar" Click="OnTurnOff"/>
+                </StackPanel>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0,0,6,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <TextBlock Text="SELECCION" Foreground="{StaticResource TextDim}"
+                                       FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <Button x:Name="SelectionHelp" Style="{StaticResource HelpButton}"
+                                    Margin="7,0,0,0" ToolTip="El color se aplicara a todas las zonas."/>
+                        </StackPanel>
+                        <TextBlock x:Name="SelectionLabel" Text="Todo el dispositivo"
+                                   FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap"
+                                   Margin="0,0,0,9"/>
+
+                        <Button Content="Seleccionar todo" Click="OnSelectAll" Margin="0,0,0,12"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <TextBlock Text="EFECTO" Foreground="{StaticResource TextDim}"
+                                       FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <Button x:Name="EffectHelp" Style="{StaticResource HelpButton}"
+                                    Margin="7,0,0,0" ToolTip="Lo ejecuta el propio dispositivo."/>
+                        </StackPanel>
+                        <ComboBox x:Name="ModeBox" Margin="0,0,0,12"
+                                  SelectionChanged="OnModeSelected"/>
+
+                        <StackPanel x:Name="SoftwarePanel" Visibility="Collapsed">
+                            <TextBlock Text="Donde" Foreground="{StaticResource TextDim}" FontSize="11"/>
+                            <ComboBox x:Name="EffectScope" Margin="0,2,0,10"
+                                      SelectionChanged="OnEffectScopeChanged">
+                                <ComboBoxItem Content="Solo la parte seleccionada"/>
+                                <ComboBoxItem Content="Todo el dispositivo"/>
+                                <ComboBoxItem Content="Todos los dispositivos" IsSelected="True"/>
+                            </ComboBox>
+                            <TextBlock x:Name="SpeedLabel" Text="Velocidad"
+                                       Foreground="{StaticResource TextDim}" FontSize="11"/>
+                            <Slider x:Name="EffectSpeed" Minimum="0.1" Maximum="3" Value="0.6"
+                                    Margin="0,2,0,14" ValueChanged="OnEffectSpeedChanged"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <TextBlock Text="AUTOMATICO" Foreground="{StaticResource TextDim}"
+                                       FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <Button Style="{StaticResource HelpButton}" Margin="7,0,0,0"
+                                    ToolTip="El color se obtiene del icono de la aplicacion que tengas en primer plano."/>
+                        </StackPanel>
+                        <CheckBox x:Name="FollowApp" Content="Seguir la app en primer plano"
+                                  Foreground="{StaticResource Text}" FontSize="12"
+                                  Margin="2,0,0,12"
+                                  Checked="OnFollowAppToggled" Unchecked="OnFollowAppToggled"/>
+                        <Border x:Name="FollowAppInfo" Visibility="Collapsed"
+                                Background="{StaticResource PanelAlt}" CornerRadius="6"
+                                Padding="9,7" Margin="0,-5,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <Border x:Name="FollowAppSwatch" Width="18" Height="18"
+                                        CornerRadius="4" Background="Transparent"/>
+                                <TextBlock x:Name="FollowAppName" Margin="9,0,0,0" FontSize="12"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="CalibrationButton"
+                                    Content="Calibrar color del dispositivo..."
+                                    Click="OnOpenCalibration" Margin="0,0,7,0"/>
+                            <Button Grid.Column="1" x:Name="CalibrationHelp"
+                                    Style="{StaticResource HelpButton}"
+                                    ToolTip="Perfil neutro para el dispositivo seleccionado."
+                                    VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Text="COLOR" Style="{StaticResource Heading}" Margin="0,0,0,6"/>
+                        <controls:ColorPicker x:Name="Picker"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- Barra de estado -->
+        <Border Grid.Row="1" Grid.ColumnSpan="3" Background="{StaticResource Panel}"
+                CornerRadius="8" Padding="12,8" Margin="0,14,0,0">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="Reconectar" Click="OnReconnect"
+                        Padding="10,4" FontSize="11"/>
+                <TextBlock x:Name="Status" Text="Conectando..." VerticalAlignment="Center"
+                           Foreground="{StaticResource TextDim}" FontSize="12"/>
+            </DockPanel>
+        </Border>
+        </Grid>
+    </Grid>
+</Window>
