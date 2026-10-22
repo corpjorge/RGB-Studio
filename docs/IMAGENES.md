@@ -12,8 +12,9 @@ el README y la guía puedan verse sin depender de enlaces externos.
 | `images/memoria.png` | Módulo de RAM con selección de un LED. | Interfaz WPF renderizada con datos simulados. |
 | `images/calibracion.png` | Ganancias, gamma y acciones del diálogo. | Contenido del diálogo WPF renderizado con valores iniciales de ejemplo para la Z390. |
 | `images/sin-conexion.jpg` | Ventana sin dispositivos y error del servidor SDK. | Captura real de la aplicación ejecutada sin servidor SDK accesible. |
+| `images/actualizaciones-openrgb.png` | Panel de búsqueda automática, estado y botón Buscar ahora. | Interfaz WPF renderizada con datos simulados y una actualización preparada como ejemplo. |
 
-Las cuatro vistas de demostración reutilizan el XAML, los controles, el renderizador y los
+Las vistas de demostración reutilizan el XAML, los controles, el renderizador y los
 recursos gráficos de la aplicación compilada. Se prepararon fuera del flujo normal de conexión,
 con un inventario simulado en memoria y sin enviar comandos RGB. Llevan una banda que identifica
 su carácter ilustrativo. Esa banda no forma parte de la aplicación.

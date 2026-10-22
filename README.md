@@ -26,6 +26,7 @@ imagen son ilustrativos; no representan una validación física del hardware.*
 - Color automático a partir del icono de la aplicación en primer plano.
 - Calibración RGB por dispositivo y por zona de la placa catalogada, con perfiles guardados.
 - Configuración de la longitud de tiras direccionables y funcionamiento en segundo plano.
+- Detección, descarga e instalación automática de nuevas versiones estables de OpenRGB para Windows x64.
 
 ## Requisitos
 
@@ -34,8 +35,9 @@ imagen son ilustrativos; no representan una validación física del hardware.*
 - Para detectar la RAM mediante SMBus en este equipo: [PawnIO](https://pawnio.eu) y OpenRGB
   ejecutado como administrador. RGB Studio no requiere elevación.
 
-Los binarios de OpenRGB y los módulos de terceros se instalan por separado y no se incluyen
-en este repositorio. La detección y las funciones disponibles dependen del controlador de OpenRGB.
+Los binarios de OpenRGB y los módulos de terceros no se incluyen en este repositorio. La aplicación
+puede descargar automáticamente la distribución portátil oficial de OpenRGB; PawnIO se instala
+por separado. La detección y las funciones disponibles dependen del controlador de OpenRGB.
 
 ## Inicio rápido
 
@@ -46,13 +48,15 @@ dotnet restore App/App.csproj
 dotnet build App/App.csproj -c Release
 ```
 
-Abre **RGB Studio.cmd**. El lanzador busca OpenRGB en estas carpetas hermanas:
+Abre **RGB Studio.cmd**. El lanzador prioriza la versión oficial preparada en
+`%LocalAppData%\RgbStudio\OpenRGB\versions\`, comprobando su manifiesto y el hash del ejecutable.
+Si no hay ninguna utilizable, busca OpenRGB en estas carpetas hermanas:
 
 ```text
 RGBFusionSDK/
 ├── RgbStudio/                  Este repositorio
 ├── OpenRGB-Custom-Build-v2/
-│   └── OpenRGB.exe             Primera opción del lanzador
+│   └── OpenRGB.exe             Respaldo personalizado
 └── OpenRGB/
     └── OpenRGB.exe             Respaldo
 ```
@@ -80,6 +84,33 @@ Para los efectos **◆**, revisa **Donde**: su valor inicial es **Todos los disp
 ![Ejemplo del mapa del teclado y los controles de un efecto por software](docs/images/teclado-efectos.png)
 
 *Demostración de la interfaz; consulta los pasos y alcances en la [guía visual](docs/GUIA-DE-USO.md).*
+
+## Actualizaciones automáticas de OpenRGB
+
+El panel **ACTUALIZACIONES DE OPENRGB**, debajo de la lista de dispositivos, está activado por
+defecto. Busca versiones estables oficiales al iniciar y cada seis horas, descarga el ZIP de
+Windows x64 y prepara la instalación en segundo plano. **Buscar ahora** permite comprobarla de
+inmediato; desmarcar la casilla desactiva la búsqueda automática y cancela una descarga en curso.
+
+![Panel de actualizaciones de OpenRGB en la interfaz WPF](docs/images/actualizaciones-openrgb.png)
+
+*Demostración de la interfaz con una actualización preparada; no representa una prueba de hardware.*
+
+La actualización se usa **cuando vuelva a iniciarse el servidor de OpenRGB desde el lanzador**.
+No se reinicia un servidor activo durante un efecto. Cierra OpenRGB desde su propia bandeja y
+abre `RGB Studio.cmd`, o utiliza el lanzador después de reiniciar Windows. Cerrar la ventana de
+RGB Studio solo la oculta: no detiene OpenRGB.
+
+En la primera comprobación se prepara la estable oficial si todavía no hay una instalación
+administrada, aunque tengas una compilación personalizada. Esta se conserva. Para volver a ella,
+cierra primero OpenRGB y ejecuta:
+
+```powershell
+.\Iniciar.ps1 -UsarOpenRgbAnterior
+```
+
+También puedes pasar `-UsarOpenRgbAnterior` a `RGB Studio.cmd`. Esta opción omite las versiones
+administradas durante ese arranque. Consulta [el funcionamiento y los respaldos](docs/GUIA-DE-USO.md#10-actualizaciones-de-openrgb).
 
 ## Catálogo de efectos propios
 

@@ -41,8 +41,11 @@ estado lógico mostrado en el mapa.
 | `App/Assets/` | Icono y fotografías utilizadas por la interfaz. |
 | `App/AppWatcher.cs` | Color representativo del icono de la app en primer plano. |
 | `App/TrayIcon.cs` | Bandeja, restauración y salida. |
+| `App/MainWindow.Updates.cs` | Búsqueda periódica, controles de actualización y cancelación. |
+| `App/Updates/` | Publicaciones oficiales, descarga, validación y manifiesto de OpenRGB. |
 | `App/App.xaml.cs` | Instancia única y ciclo de vida. |
 | `test-connection/` | Utilidad de consola para inspección y pruebas manuales. |
+| `tests/OpenRgbUpdateChecks/` | Verificaciones del actualizador y del selector del lanzador, sin hardware. |
 | `Iniciar.ps1` y `RGB Studio.cmd` | Arranque de OpenRGB y la aplicación compilada. |
 | `docs/` | Guía de uso, arquitectura e imágenes. |
 
@@ -104,7 +107,25 @@ genérico para equipos sin catálogo y verifica las correspondencias físicas an
 
 ## Inspección y pruebas manuales
 
-No hay un proyecto de pruebas automatizadas. Cada cambio debe compilar ambos proyectos.
+Cada cambio debe compilar ambos proyectos. El actualizador tiene verificaciones automatizadas
+sin hardware y sin dependencias externas de pruebas:
+
+```powershell
+dotnet run --project tests/OpenRgbUpdateChecks -c Release
+powershell -NoProfile -ExecutionPolicy Bypass -File tests/OpenRgbUpdateChecks/Check-Launcher.ps1
+```
+
+Se prueban selección de estable x64, rechazo de RC, límites de descarga, extracción de ZIP,
+cancelación, bloqueo entre procesos, persistencia de preferencias, conservación de la instalación
+previa y selección del ejecutable. Los ejecutables de las pruebas son fixtures que no se ejecutan.
+Los archivos se crean únicamente bajo `bin/`, excluido de Git.
+
+La prueba opcional con Internet descarga y valida el paquete oficial en una carpeta de pruebas;
+no ejecuta OpenRGB ni cambia la instalación del usuario:
+
+```powershell
+dotnet run --project tests/OpenRgbUpdateChecks -c Release -- --live
+```
 
 ```powershell
 dotnet run --project test-connection -- list
@@ -144,3 +165,29 @@ La aplicación se abrió y se capturó el estado sin conexión. El comando
 `dotnet run --project test-connection/test-connection.csproj -c Release --no-build -- list`
 informó que no pudo conectarse a OpenRGB en `127.0.0.1:6742`. No se validaron efectos en hardware
 ni una versión de servidor; las vistas de dispositivos usan datos de demostración.
+
+## Actualizador de OpenRGB
+
+La fuente es la [API pública de publicaciones del repositorio oficial en Codeberg](https://codeberg.org/api/v1/repos/OpenRGB/OpenRGB/releases?limit=50),
+alojamiento enlazado desde la [página oficial de descargas](https://openrgb.org/releases.html).
+Se filtra tanto `draft`/`prerelease` como el tag `release_N.N[.N]`, porque algunos RC no llevan
+la marca `prerelease`. Se elige la versión estable numéricamente mayor con un ZIP Windows x64.
+
+La comunicación usa HTTPS, acepta redirecciones únicamente dentro de Codeberg y limita metadatos,
+tamaño de descarga, número de archivos y tamaño extraído. Se valida el tamaño declarado por la API,
+las rutas y entradas del ZIP y la cabecera PE x64 de `OpenRGB.exe`. Los hashes SHA-256 calculados
+sirven para comprobar la instalación local; no son firmas del editor ni sumas publicadas por este.
+
+Cada descarga se extrae en una carpeta nueva bajo `%LocalAppData%\RgbStudio\OpenRGB\versions\`.
+El manifiesto se reemplaza mediante un archivo temporal después de validar el paquete completo.
+No se sobrescribe la carpeta personalizada ni la de un servidor activo. Si falla una actualización,
+se conserva la referencia anterior. Un bloqueo de archivo evita instalaciones simultáneas entre
+procesos; un semáforo evita comprobaciones simultáneas en la misma instancia.
+
+El lanzador valida el manifiesto y el hash del ejecutable, prioriza `Current`, después `Previous`,
+y por último las carpetas originales. `-UsarOpenRgbAnterior` omite las instalaciones administradas.
+El servidor activo se reutiliza: la versión preparada entra en uso al próximo arranque de OpenRGB.
+Este mecanismo no instala controladores ni valida automáticamente la respuesta física del hardware.
+
+Se verificó la descarga y preparación de OpenRGB 1.1 (ZIP oficial de Windows x64) sin ejecutarlo,
+junto con 36 comprobaciones locales del actualizador y 9 del lanzador. No se realizaron pruebas físicas con esta versión.

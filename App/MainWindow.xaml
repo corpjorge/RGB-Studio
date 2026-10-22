@@ -283,6 +283,21 @@
                 CornerRadius="10" Padding="14">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="DISPOSITIVOS" Style="{StaticResource Heading}"/>
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,18,0,0">
+                    <TextBlock Text="ACTUALIZACIONES DE OPENRGB" Style="{StaticResource Heading}"/>
+                    <CheckBox x:Name="AutoUpdateOpenRgb" Foreground="{StaticResource Text}"
+                              Checked="OnAutoUpdateOpenRgbChanged" Unchecked="OnAutoUpdateOpenRgbChanged"
+                              Margin="0,0,0,10">
+                        <TextBlock Text="Descargar e instalar automáticamente" TextWrapping="Wrap"/>
+                    </CheckBox>
+                    <TextBlock x:Name="OpenRgbUpdateStatus" Text="Comprobando versiones estables al iniciar…"
+                               TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource TextDim}"
+                               Margin="0,0,0,10"/>
+                    <ProgressBar x:Name="OpenRgbUpdateProgress" Height="5" Minimum="0" Maximum="100"
+                                 Visibility="Collapsed" Margin="0,0,0,10"/>
+                    <Button x:Name="CheckOpenRgbUpdateButton" Content="Buscar ahora"
+                            Click="OnCheckOpenRgbUpdate"/>
+                </StackPanel>
                 <ListBox x:Name="DeviceList" Background="Transparent" BorderThickness="0"
                          Foreground="{StaticResource Text}"
                          SelectionChanged="OnDeviceSelected"/>

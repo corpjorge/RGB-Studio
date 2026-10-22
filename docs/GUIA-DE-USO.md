@@ -186,3 +186,61 @@ dotnet run --project test-connection -- list
 Si necesitas registrar un problema de hardware, anota la versión de OpenRGB, el nombre del
 dispositivo, el modo o comando usado y lo observado físicamente. Las imágenes de demostración
 de esta guía no sustituyen esa validación.
+
+## 10. Actualizaciones de OpenRGB
+
+![Panel de actualizaciones automáticas de OpenRGB](images/actualizaciones-openrgb.png)
+
+El panel bajo la lista de dispositivos permite activar **Descargar e instalar automáticamente**
+y usar **Buscar ahora**. La actualización automática está activada por defecto. Se consulta al
+iniciar y cada seis horas, respetando la última comprobación entre sesiones. El botón manual
+ignora esa espera y funciona incluso con el modo automático desactivado.
+
+Solo se aceptan versiones estables y paquetes portátiles oficiales de Windows x64. No se instalan
+RC, versiones experimentales, paquetes de 32 bits ni instaladores MSI. La descarga muestra el
+progreso y se puede cancelar desmarcando la casilla o saliendo de RGB Studio mediante **Salir**.
+Minimizar u ocultar la ventana permite que la descarga continúe.
+
+La primera comprobación prepara la estable oficial si no hay una copia administrada. Las carpetas
+originales de OpenRGB no se modifican. Las descargas incompletas, errores de red o paquetes inválidos
+no cambian el manifiesto activo: el lanzador conserva la versión anterior utilizable.
+
+### Cuándo se aplica
+
+1. Espera el mensaje **OpenRGB … instalado. Se usará al próximo inicio del servidor.**
+2. Cierra OpenRGB desde su propia bandeja. Esto detiene la comunicación y los efectos RGB actuales.
+3. Abre `RGB Studio.cmd` para iniciar la versión preparada; si RGB Studio ya estaba abierto, pulsa
+   **Reconectar** después de que el servidor esté disponible.
+
+También se aplicará al usar el lanzador tras reiniciar Windows, siempre que otro mecanismo no haya
+iniciado antes un servidor diferente. Un servidor que ya escucha en el puerto 6742 se reutiliza;
+no se cierra automáticamente mientras controla el hardware.
+
+El arranque de OpenRGB puede seguir mostrando la solicitud de administrador de Windows para el
+acceso a la RAM. La descarga y preparación se hacen sin elevar RGB Studio. PawnIO no se instala
+ni se actualiza con este mecanismo.
+
+### Recuperar una instalación anterior
+
+El manifiesto conserva una referencia a la versión administrada previa. Si el archivo actual
+falta o no coincide con su hash, el lanzador intenta esa versión y después las carpetas originales.
+Para omitir las versiones administradas voluntariamente, cierra primero OpenRGB y ejecuta:
+
+```powershell
+.\Iniciar.ps1 -UsarOpenRgbAnterior
+```
+
+Esto usa `../OpenRGB-Custom-Build-v2/` o, como respaldo, `../OpenRGB/`. La selección se aplica solo a
+ese arranque. Es útil si la versión oficial cambia el comportamiento de un dispositivo que antes
+necesitaba modificaciones locales. Desactivar las actualizaciones no cambia la versión ya preparada.
+
+Los archivos de actualización se guardan en `%LocalAppData%\RgbStudio\OpenRGB\`:
+
+| Ruta | Contenido |
+| --- | --- |
+| `updates.json` | Preferencia automática y fecha de la última comprobación de metadatos. |
+| `installation.json` | Versión preparada, ejecutable, hashes y referencia a la instalación previa. |
+| `versions/` | Distribuciones completas en carpetas independientes. |
+
+Las calibraciones y longitudes de tiras de RGB Studio siguen guardadas en `%AppData%\RgbStudio\`.
+La actualización no las reemplaza. Las fotografías y colores de la imagen son de demostración.

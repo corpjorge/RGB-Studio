@@ -76,6 +76,7 @@ public partial class MainWindow : Window
         _trayIcon = new TrayIcon();
 
         InitializeComponent();
+        InitializeOpenRgbUpdates();
 
         // Ocupa todo el alto util si hace falta, pero nunca queda escondida
         // detras de la barra de tareas en pantallas mas pequenas.
